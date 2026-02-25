@@ -163,34 +163,27 @@ struct EnableJITIntent: AppIntent, ForegroundContinuableIntent {
                requestValueDialog: "Which app would you like to enable JIT for?")
     var app: InstalledAppEntity?
 
-    @Parameter(title: "Process ID", description: "A specific PID to attach to instead of an app")
-    var pid: Int?
-
     static var parameterSummary: some ParameterSummary {
         Summary("Enable JIT for \(\.$app)")
     }
 
     func perform() async throws -> some IntentResult & ReturnsValue<String> {
-        let bundleID = app?.id
-
-        guard bundleID != nil || pid != nil else {
-            return .result(value: "Select an app or provide a PID.")
+        guard let bundleID = app?.id else {
+            return .result(value: "Select an app to enable JIT for.")
         }
 
         await ensureHeartbeat()
 
         var scriptData: Data? = nil
         var scriptName: String? = nil
-        if let bundleID {
-            if let preferred = IntentScriptResolver.preferredScript(for: bundleID) {
-                scriptData = preferred.data
-                scriptName = preferred.name
-            }
+        if let preferred = IntentScriptResolver.preferredScript(for: bundleID) {
+            scriptData = preferred.data
+            scriptName = preferred.name
         }
 
         var callback: DebugAppCallback? = nil
         if ProcessInfo.processInfo.hasTXM, let sd = scriptData {
-            let name = scriptName ?? bundleID ?? "Script"
+            let name = scriptName ?? bundleID
             callback = { pid, debugProxyHandle, remoteServerHandle, semaphore in
                 let model = RunJSViewModel(
                     pid: Int(pid),
@@ -216,17 +209,8 @@ struct EnableJITIntent: AppIntent, ForegroundContinuableIntent {
             if let message { LogManager.shared.addInfoLog(message) }
         }
 
-        let success: Bool
-        let target: String
-        if let pid {
-            target = "PID \(pid)"
-            success = JITEnableContext.shared.debugApp(withPID: Int32(pid), logger: logger, jsCallback: callback)
-        } else if let bundleID {
-            target = app?.displayName ?? bundleID
-            success = JITEnableContext.shared.debugApp(withBundleID: bundleID, logger: logger, jsCallback: callback)
-        } else {
-            return .result(value: "No target specified.")
-        }
+        let target = app?.displayName ?? bundleID
+        let success = JITEnableContext.shared.debugApp(withBundleID: bundleID, logger: logger, jsCallback: callback)
 
         if success {
             LogManager.shared.addInfoLog("JIT enabled for \(target) via Shortcut")
