@@ -15,6 +15,33 @@ extension CLLocationCoordinate2D: Equatable {
     }
 }
 
+// MARK: - Search Completer
+
+@MainActor
+final class LocationSearchCompleter: NSObject, ObservableObject, MKLocalSearchCompleterDelegate {
+    @Published var results: [MKLocalSearchCompletion] = []
+    private let completer = MKLocalSearchCompleter()
+
+    override init() {
+        super.init()
+        completer.delegate = self
+        completer.resultTypes = [.address, .pointOfInterest]
+    }
+
+    func update(query: String) {
+        completer.queryFragment = query
+    }
+
+    nonisolated func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        let results = completer.results
+        Task { @MainActor in self.results = results }
+    }
+
+    nonisolated func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
+        Task { @MainActor in self.results = [] }
+    }
+}
+
 struct LocationSimulationView: View {
     // Serial queue: simulate_location and clear_simulated_location share C global
     // state — serialising all calls eliminates the use-after-free race.
@@ -30,6 +57,9 @@ struct LocationSimulationView: View {
     @State private var showAlert = false
     @State private var alertTitle = ""
     @State private var alertMessage = ""
+
+    @State private var searchText = ""
+    @StateObject private var searchCompleter = LocationSearchCompleter()
 
     private var pairingFilePath: String {
         URL.documentsDirectory.appendingPathComponent("pairingFile.plist").path()
@@ -70,32 +100,94 @@ struct LocationSimulationView: View {
                 }
             }
 
-            VStack(spacing: 12) {
-                if let coord = coordinate {
-                    Text(String(format: "%.6f, %.6f", coord.latitude, coord.longitude))
-                        .font(.footnote.monospaced())
-                        .foregroundStyle(.secondary)
-
-                    HStack(spacing: 12) {
-                        Button("Stop", action: clear)
-                            .buttonStyle(.bordered)
-                            .tint(.red)
-                            .disabled(!pairingExists || isBusy)
-
-                        Button("Simulate Location", action: simulate)
-                            .buttonStyle(.borderedProminent)
-                            .disabled(!pairingExists || isBusy)
+            VStack(spacing: 0) {
+                if !searchCompleter.results.isEmpty {
+                    if #available(iOS 26, *) {
+                        List(searchCompleter.results.prefix(5), id: \.self) { result in
+                            Button {
+                                selectSearchResult(result)
+                            } label: {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(result.title)
+                                        .font(.subheadline)
+                                    if !result.subtitle.isEmpty {
+                                        Text(result.subtitle)
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                            }
+                        }
+                        .listStyle(.plain)
+                        .frame(maxHeight: 350)
+                        .scrollDisabled(true)
+                        .glassEffect(in: .rect(cornerRadius: 12))
+                        .padding(.horizontal, 16)
+                        .padding(.top, 8)
+                    } else {
+                        List(searchCompleter.results.prefix(5), id: \.self) { result in
+                            Button {
+                                selectSearchResult(result)
+                            } label: {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(result.title)
+                                        .font(.subheadline)
+                                    if !result.subtitle.isEmpty {
+                                        Text(result.subtitle)
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                            }
+                        }
+                        .listStyle(.plain)
+                        .frame(maxHeight: 350)
+                        .scrollDisabled(true)
+                        .padding(.horizontal, 16)
+                        .padding(.top, 8)
                     }
-                } else {
-                    Text("Tap map to drop pin")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
                 }
+
+                Spacer()
+
+                // Bottom controls
+                VStack(spacing: 12) {
+                    if let coord = coordinate {
+                        Text(String(format: "%.6f, %.6f", coord.latitude, coord.longitude))
+                            .font(.footnote.monospaced())
+                            .foregroundStyle(.secondary)
+
+                        HStack(spacing: 12) {
+                            Button("Stop", action: clear)
+                                .buttonStyle(.bordered)
+                                .tint(.red)
+                                .disabled(!pairingExists || isBusy)
+
+                            Button("Simulate Location", action: simulate)
+                                .buttonStyle(.borderedProminent)
+                                .disabled(!pairingExists || isBusy)
+                        }
+                    } else {
+                        Text("Tap map to drop pin")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .padding(.bottom, 24)
+                .padding(.horizontal, 16)
             }
-            .padding(.bottom, 24)
-            .padding(.horizontal, 16)
         }
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                TextField("Search location...", text: $searchText)
+                    .padding(.leading, 6)
+                    .autocorrectionDisabled()
+                    .onChange(of: searchText) { _, newValue in
+                        searchCompleter.update(query: newValue)
+                    }
+            }
+        }
         .alert(alertTitle, isPresented: $showAlert) {
             Button("OK", role: .cancel) { }
         } message: {
@@ -104,6 +196,18 @@ struct LocationSimulationView: View {
         .onDisappear {
             stopResendLoop()
             endBackgroundTask()
+        }
+    }
+
+    private func selectSearchResult(_ result: MKLocalSearchCompletion) {
+        searchText = ""
+        searchCompleter.results = []
+
+        let request = MKLocalSearch.Request(completion: result)
+        MKLocalSearch(request: request).start { response, _ in
+            if let item = response?.mapItems.first {
+                coordinate = item.placemark.coordinate
+            }
         }
     }
 

@@ -149,15 +149,8 @@ struct SettingsView: View {
                         Spacer()
                         TextField("10.7.0.1", text: $customTargetIP)
                                 .multilineTextAlignment(.trailing)
-                                .keyboardType(.decimalPad)
-                                .toolbar {
-                                    ToolbarItemGroup(placement: .keyboard) {
-                                        Spacer()
-                                        Button("Done") {
-                                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                                        }
-                                    }
-                                }
+                                .keyboardType(.numbersAndPunctuation)
+                                .submitLabel(.done)
                     }
                     Button { openAppFolder() } label: {
                         Label("App Folder", systemImage: "folder")
