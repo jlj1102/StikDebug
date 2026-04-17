@@ -1582,6 +1582,57 @@
         }
       }
     },
+    "Copy All (Text)": {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy All (Text)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "复制全部（文本）"
+          }
+        }
+      }
+    },
+    "Copy All (CSV)": {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy All (CSV)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "复制全部（CSV）"
+          }
+        }
+      }
+    },
+    "Share…": {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "分享…"
+          }
+        }
+      }
+    },
     "Access additional tools": {
       "extractionState" : "manual",
       "localizations" : {
@@ -2360,6 +2411,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "在地图上标记地点以保存位置"
+          }
+        }
+      }
+    },
+    "Copied": {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copied"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已复制"
           }
         }
       }

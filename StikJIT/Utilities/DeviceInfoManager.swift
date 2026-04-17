@@ -253,13 +253,13 @@ struct DeviceInfoView: View {
 
                         Menu {
                             Button { copyAllText() } label: {
-                                Label("Copy All (Text)", systemImage: "doc.on.doc")
+                                Label(NSLocalizedString("Copy All (Text)", comment: ""), systemImage: "doc.on.doc")
                             }
                             Button { copyAllCSV() } label: {
-                                Label("Copy All (CSV)", systemImage: "tablecells")
+                                Label(NSLocalizedString("Copy All (CSV)", comment: ""), systemImage: "tablecells")
                             }
                             Button { shareAll() } label: {
-                                Label("Share…", systemImage: "square.and.arrow.up.on.square")
+                                Label(NSLocalizedString("Share…", comment: ""), systemImage: "square.and.arrow.up.on.square")
                             }
                         } label: {
                             Image(systemName: "ellipsis.circle")
