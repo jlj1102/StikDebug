@@ -1633,6 +1633,23 @@
         }
       }
     },
+    "Show %d older profiles": {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show %d older profiles"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "显示 %d 个旧配置"
+          }
+        }
+      }
+    },
     "Access additional tools": {
       "extractionState" : "manual",
       "localizations" : {
@@ -2160,23 +2177,6 @@
         }
       }
     },
-    "Pause syslog stream":{
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pause syslog stream"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "暂停系统日志输出"
-          }
-        }
-      }
-    },
     "Search device info…": {
       "extractionState" : "manual",
       "localizations" : {
@@ -2428,6 +2428,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已复制"
+          }
+        }
+      }
+    },
+    "Search": {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索"
           }
         }
       }
