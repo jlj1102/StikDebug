@@ -35,6 +35,23 @@
         }
       }
     },
+    "Advanced": {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Advanced"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "高级"
+          }
+        }
+      }
+    },
     "Add to Home" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -506,7 +523,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "确认完成"
+            "value" : "完成"
           }
         }
       }
