@@ -158,7 +158,7 @@ struct ProfileView: View {
                             if let match = entry.bestMatchingProfile {
                                 HStack {
                                     Image(systemName: "clock")
-                                    Text("Expires: \(match.profile.formattedDate)")
+                                    Text(String(format: NSLocalizedString("Expires: %@", comment: ""), match.profile.formattedDate))
                                 }
                                 .foregroundStyle(match.profile.dateColor)
                                 .font(.subheadline)
