@@ -804,9 +804,9 @@ struct LocationSimulationView: View {
     private func simulate() {
         guard pairingExists, let coord = coordinate, !isBusy else { return }
         runLocationCommand(
-            errorTitle: "Simulation Failed",
+            errorTitle: NSLocalizedString("Simulation Failed", comment: ""),
             errorMessage: { code in
-                "Could not simulate location (error \(code)). Make sure the device is connected and the DDI is mounted."
+                String(format: NSLocalizedString("Could not simulate location (error %d). Make sure the device is connected and the DDI is mounted.", comment: ""), code)
             },
             operation: { locationUpdateCode(for: coord) }
         ) {
@@ -827,9 +827,9 @@ struct LocationSimulationView: View {
         stopResendLoop()
         cancelRoutePlayback(resetMarker: false)
         runLocationCommand(
-            errorTitle: "Route Simulation Failed",
+            errorTitle: NSLocalizedString("Route Simulation Failed", comment: ""),
             errorMessage: { code in
-                "Could not start route simulation (error \(code)). Make sure the device is connected and the DDI is mounted."
+                String(format: NSLocalizedString("Could not start route simulation (error %d). Make sure the device is connected and the DDI is mounted.", comment: ""), code)
             },
             operation: { locationUpdateCode(for: firstCoordinate) }
         ) {
@@ -1137,7 +1137,7 @@ private struct RouteSearchSheet: View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 16) {
                 routeField(
-                    title: "Start",
+                    title: NSLocalizedString("Start", comment: ""),
                     icon: "circle.fill",
                     tint: .green,
                     text: $startQuery,
@@ -1146,7 +1146,7 @@ private struct RouteSearchSheet: View {
                 )
 
                 routeField(
-                    title: "End",
+                    title: NSLocalizedString("End", comment: ""),
                     icon: "flag.checkered.circle.fill",
                     tint: .red,
                     text: $endQuery,

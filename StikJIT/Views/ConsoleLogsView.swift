@@ -534,9 +534,9 @@ struct ConsoleLogsView: View {
 
     private var syslogControlLabel: String {
         if !systemLogStream.isStreaming {
-            return "Start syslog relay"
+            return NSLocalizedString("Start syslog relay", comment: "")
         }
-        return systemLogStream.isPaused ? "Resume syslog stream" : "Pause syslog stream"
+        return systemLogStream.isPaused ? NSLocalizedString("Resume syslog stream", comment: "") : NSLocalizedString("Pause syslog stream", comment: "")
     }
 
     private func presentAlert(title: String, message: String) {
