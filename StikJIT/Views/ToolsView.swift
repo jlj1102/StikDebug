@@ -18,12 +18,12 @@ struct ToolsView: View {
 
     private var tools: [ToolItem] {
         [
-            ToolItem(id: "scripts", title: "Scripts", detail: "Manage and run JS scripts", systemImage: "scroll", destination: AnyView(ScriptListView())),
-            ToolItem(id: "console", title: "Console", detail: "Live device logs", systemImage: "terminal", destination: AnyView(ConsoleLogsView())),
-            ToolItem(id: "deviceinfo", title: "Device Info", detail: "View detailed device metadata", systemImage: "iphone.and.arrow.forward", destination: AnyView(DeviceInfoView())),
-            ToolItem(id: "profiles", title: "App Expiry", detail: "Check app expiration dates", systemImage: "calendar.badge.clock", destination: AnyView(ProfileView())),
-            ToolItem(id: "processes", title: "Processes", detail: "Inspect running apps", systemImage: "rectangle.stack.person.crop", destination: AnyView(ProcessInspectorView())),
-            ToolItem(id: "location", title: "Location Simulation", detail: "Simulate GPS location", systemImage: "location", destination: AnyView(LocationSimulationView()))
+            ToolItem(id: "scripts", title: NSLocalizedString("Scripts", comment: ""), detail: NSLocalizedString("Manage and run JS scripts", comment: ""), systemImage: "scroll", destination: AnyView(ScriptListView())),
+            ToolItem(id: "console", title: NSLocalizedString("Console", comment: ""), detail: NSLocalizedString("Live device logs", comment: ""), systemImage: "terminal", destination: AnyView(ConsoleLogsView())),
+            ToolItem(id: "deviceinfo", title: NSLocalizedString("Device Info", comment: ""), detail: NSLocalizedString("View detailed device metadata", comment: ""), systemImage: "iphone.and.arrow.forward", destination: AnyView(DeviceInfoView())),
+            ToolItem(id: "profiles", title: NSLocalizedString("App Expiry", comment: ""), detail: NSLocalizedString("Check app expiration dates", comment: ""), systemImage: "calendar.badge.clock", destination: AnyView(ProfileView())),
+            ToolItem(id: "processes", title: NSLocalizedString("Processes", comment: ""), detail: NSLocalizedString("Inspect running apps", comment: ""), systemImage: "rectangle.stack.person.crop", destination: AnyView(ProcessInspectorView())),
+            ToolItem(id: "location", title: NSLocalizedString("Location Simulation", comment: ""), detail: NSLocalizedString("Simulate GPS location", comment: ""), systemImage: "location", destination: AnyView(LocationSimulationView()))
         ]
     }
 
@@ -45,7 +45,7 @@ struct ToolsView: View {
                     }
                 }
             }
-            .navigationTitle("Tools")
+            .navigationTitle(NSLocalizedString("Tools", comment: ""))
         }
     }
 }

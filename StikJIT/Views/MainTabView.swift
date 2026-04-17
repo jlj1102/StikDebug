@@ -27,13 +27,13 @@ struct MainTabView: View {
 
     private var configurableTabs: [TabDescriptor] {
         let tabs: [TabDescriptor] = [
-            TabDescriptor(id: "home", title: "Apps", systemImage: "square.grid.2x2") { AnyView(HomeView()) },
-            TabDescriptor(id: "scripts", title: "Scripts", systemImage: "scroll") { AnyView(ScriptListView()) },
-            TabDescriptor(id: "tools", title: "Tools", systemImage: "wrench.and.screwdriver") { AnyView(ToolsView()) },
-            TabDescriptor(id: "deviceinfo", title: "Device Info", systemImage: "iphone.and.arrow.forward") { AnyView(DeviceInfoView()) },
-            TabDescriptor(id: "profiles", title: "App Expiry", systemImage: "calendar.badge.clock") { AnyView(ProfileView()) },
-            TabDescriptor(id: "processes", title: "Processes", systemImage: "rectangle.stack.person.crop") { AnyView(ProcessInspectorView()) },
-            TabDescriptor(id: "location", title: "Location", systemImage: "location") { AnyView(LocationSimulationView()) }
+            TabDescriptor(id: "home", title: NSLocalizedString("Apps", comment: ""), systemImage: "square.grid.2x2") { AnyView(HomeView()) },
+            TabDescriptor(id: "scripts", title: NSLocalizedString("Scripts", comment: ""), systemImage: "scroll") { AnyView(ScriptListView()) },
+            TabDescriptor(id: "tools", title: NSLocalizedString("Tools", comment: ""), systemImage: "wrench.and.screwdriver") { AnyView(ToolsView()) },
+            TabDescriptor(id: "deviceinfo", title: NSLocalizedString("Device Info", comment: ""), systemImage: "iphone.and.arrow.forward") { AnyView(DeviceInfoView()) },
+            TabDescriptor(id: "profiles", title: NSLocalizedString("App Expiry", comment: ""), systemImage: "calendar.badge.clock") { AnyView(ProfileView()) },
+            TabDescriptor(id: "processes", title: NSLocalizedString("Processes", comment: ""), systemImage: "rectangle.stack.person.crop") { AnyView(ProcessInspectorView()) },
+            TabDescriptor(id: "location", title: NSLocalizedString("Location", comment: ""), systemImage: "location") { AnyView(LocationSimulationView()) }
         ]
         return tabs
     }
@@ -42,7 +42,7 @@ struct MainTabView: View {
         configurableTabs
     }
     
-    private let settingsTab = TabDescriptor(id: "settings", title: "Settings", systemImage: "gearshape.fill") {
+    private let settingsTab = TabDescriptor(id: "settings", title: NSLocalizedString("Settings", comment: ""), systemImage: "gearshape.fill") {
         AnyView(SettingsView())
     }
     
