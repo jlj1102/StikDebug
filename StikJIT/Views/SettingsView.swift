@@ -46,14 +46,14 @@ struct SettingsView: View {
     
     private var tabOptions: [TabOption] {
         var options: [TabOption] = [
-            TabOption(id: "home", title: NSLocalizedString("Home", comment: ""), detail: NSLocalizedString("Dashboard overview", comment: ""), icon: "house", isBeta: false),
-            TabOption(id: "scripts", title: NSLocalizedString("Scripts", comment: ""), detail: NSLocalizedString("Manage automation scripts", comment: ""), icon: "scroll", isBeta: false),
-            TabOption(id: "tools", title: NSLocalizedString("Tools", comment: ""), detail: NSLocalizedString("Access additional tools", comment: ""), icon: "wrench.and.screwdriver", isBeta: false)
+            TabOption(id: "home", title: String("Home".localized), detail: String("Dashboard overview".localized), icon: "house", isBeta: false),
+            TabOption(id: "scripts", title: String("Scripts".localized), detail: String("Manage automation scripts".localized), icon: "scroll", isBeta: false),
+            TabOption(id: "tools", title: String("Tools".localized), detail: String("Access additional tools".localized), icon: "wrench.and.screwdriver", isBeta: false)
         ]
-        options.append(TabOption(id: "deviceinfo", title: NSLocalizedString("Device Info", comment: ""), detail: NSLocalizedString("View detailed device metadata", comment: ""), icon: "iphone.and.arrow.forward", isBeta: false))
-        options.append(TabOption(id: "profiles", title: NSLocalizedString("App Expiry", comment: ""), detail: NSLocalizedString("Check app expiration date, install/remove profiles", comment: ""), icon: "calendar.badge.clock", isBeta: false))
-        options.append(TabOption(id: "processes", title: NSLocalizedString("Processes", comment: ""), detail: NSLocalizedString("Inspect running apps", comment: ""), icon: "rectangle.stack.person.crop", isBeta: false))
-        options.append(TabOption(id: "location", title: NSLocalizedString("Location Sim", comment: ""), detail: NSLocalizedString("Sideload only", comment: ""), icon: "location", isBeta: false))
+        options.append(TabOption(id: "deviceinfo", title: String("Device Info".localized), detail: String("View detailed device metadata".localized), icon: "iphone.and.arrow.forward", isBeta: false))
+        options.append(TabOption(id: "profiles", title: String("App Expiry".localized), detail: String("Check app expiration date, install/remove profiles".localized), icon: "calendar.badge.clock", isBeta: false))
+        options.append(TabOption(id: "processes", title: String("Processes".localized), detail: String("Inspect running apps".localized), icon: "rectangle.stack.person.crop", isBeta: false))
+        options.append(TabOption(id: "location", title: String("Location Sim".localized), detail: String("Sideload only".localized), icon: "location", isBeta: false))
         return options
     }
 
@@ -80,17 +80,17 @@ struct SettingsView: View {
                 // 2) GitHub
                 Section {
                     Link(destination: URL(string: "https://github.com/StephenDev0/StikDebug/stargazers")!) {
-                        Label(NSLocalizedString("Star on GitHub", comment: ""), systemImage: "star")
+                        Label(String(format: "Star on GitHub".localized), systemImage: "star")
                     }
                 }
 
                 // 3) Pairing File
-                Section(NSLocalizedString("Pairing File", comment: "")) {
+                Section(String(format: "Pairing File".localized)) {
                     Button { isShowingPairingFilePicker = true } label: {
-                        Label(NSLocalizedString("Import Pairing File", comment: ""), systemImage: "doc.badge.plus")
+                        Label(String(format: "Import Pairing File".localized), systemImage: "doc.badge.plus")
                     }
                     if showPairingFileMessage && !isImportingFile {
-                        Label(NSLocalizedString("Imported successfully", comment: ""), systemImage: "checkmark.circle.fill")
+                        Label(String(format: "Imported successfully".localized), systemImage: "checkmark.circle.fill")
                             .foregroundStyle(.green)
                     }
                 }
@@ -99,8 +99,8 @@ struct SettingsView: View {
                 Section {
                     Toggle(isOn: $keepAliveAudio) {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(NSLocalizedString("Silent Audio", comment: ""))
-                            Text(NSLocalizedString("Plays inaudible audio so iOS keeps the app running.", comment: ""))
+                            Text(String(format: "Silent Audio".localized))
+                            Text(String(format: "Plays inaudible audio so iOS keeps the app running.".localized))
                                 .font(.caption).foregroundStyle(.secondary)
                         }
                     }
@@ -111,8 +111,8 @@ struct SettingsView: View {
 
                     Toggle(isOn: $keepAliveLocation) {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(NSLocalizedString("Background Location", comment: ""))
-                            Text(NSLocalizedString("Uses low-accuracy location to stay alive when an activity needs it.", comment: ""))
+                            Text(String(format: "Background Location".localized))
+                            Text(String(format: "Uses low-accuracy location to stay alive when an activity needs it.".localized))
                                 .font(.caption).foregroundStyle(.secondary)
                         }
                     }
@@ -121,24 +121,24 @@ struct SettingsView: View {
                     }
 
                 } header: {
-                    Text(NSLocalizedString("Background Keep-Alive", comment: ""))
+                    Text(String(format: "Background Keep-Alive".localized))
                 }
 
                 // 6) Behavior
-                Section(NSLocalizedString("Behavior", comment: "")) {
+                Section(String(format: "Behavior".localized)) {
                     Toggle(isOn: $overrideTXMDetection) {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(NSLocalizedString("Always Run Scripts", comment: ""))
-                            Text(NSLocalizedString("Treats device as TXM-capable to bypass hardware checks.", comment: ""))
+                            Text(String(format: "Always Run Scripts".localized))
+                            Text(String(format: "Treats device as TXM-capable to bypass hardware checks.".localized))
                                 .font(.caption).foregroundStyle(.secondary)
                         }
                     }
                 }
 
                 // 7) Advanced
-                Section(NSLocalizedString("Advanced", comment: "")) {
+                Section(String(format: "Advanced".localized)) {
                     HStack {
-                        Text(NSLocalizedString("Target Device IP", comment: ""))
+                        Text(String(format: "Target Device IP".localized))
                         Spacer()
                         TextField("10.7.0.1", text: $customTargetIP)
                                 .multilineTextAlignment(.trailing)
@@ -146,10 +146,10 @@ struct SettingsView: View {
                                 .submitLabel(.done)
                     }
                     Button { openAppFolder() } label: {
-                        Label(NSLocalizedString("App Folder", comment: ""), systemImage: "folder")
+                        Label(String(format: "App Folder".localized), systemImage: "folder")
                     }.foregroundStyle(.primary)
                     Button { showDDIConfirmation = true } label: {
-                        Label(NSLocalizedString("Redownload DDI", comment: ""), systemImage: "arrow.down.circle")
+                        Label(String(format: "Redownload DDI".localized), systemImage: "arrow.down.circle")
                     }.foregroundStyle(.primary).disabled(isRedownloadingDDI)
                     if isRedownloadingDDI {
                         VStack(alignment: .leading, spacing: 4) {
@@ -162,15 +162,15 @@ struct SettingsView: View {
                 }
 
                 // 7) Help
-                Section(NSLocalizedString("Help", comment: "")) {
+                Section(String(format: "Help".localized)) {
                     Link(destination: URL(string: "https://github.com/StephenDev0/StikDebug-Guide/blob/main/pairing_file.md")!) {
-                        Label(NSLocalizedString("Pairing File Guide", comment: ""), systemImage: "questionmark.circle")
+                        Label(String(format: "Pairing File Guide".localized), systemImage: "questionmark.circle")
                     }
                     Link(destination: URL(string: "https://apps.apple.com/us/app/localdevvpn/id6755608044")!) {
-                        Label(NSLocalizedString("Download LocalDevVPN", comment: ""), systemImage: "arrow.down.circle")
+                        Label(String(format: "Download LocalDevVPN".localized), systemImage: "arrow.down.circle")
                     }
                     Link(destination: URL(string: "https://discord.gg/qahjXNTDwS")!) {
-                        Label(NSLocalizedString("Discord Support", comment: ""), systemImage: "bubble.left.and.bubble.right")
+                        Label(String(format: "Discord Support".localized), systemImage: "bubble.left.and.bubble.right")
                     }
                 }
 
@@ -182,7 +182,7 @@ struct SettingsView: View {
                         .listRowBackground(Color.clear)
                 }
             }
-            .navigationTitle(NSLocalizedString("Settings", comment: ""))
+            .navigationTitle(String(format: "Settings".localized))
         }
             .fileImporter(
             isPresented: $isShowingPairingFilePicker,
@@ -225,13 +225,13 @@ struct SettingsView: View {
                 break
             }
         }
-        .confirmationDialog(NSLocalizedString("Redownload DDI Files?", comment: ""), isPresented: $showDDIConfirmation, titleVisibility: .visible) {
-            Button(NSLocalizedString("Redownload", comment: ""), role: .destructive) {
+        .confirmationDialog(String(format: "Redownload DDI Files?".localized), isPresented: $showDDIConfirmation, titleVisibility: .visible) {
+            Button(String(format: "Redownload".localized), role: .destructive) {
                 redownloadDDIPressed()
             }
-            Button(NSLocalizedString("Cancel", comment: ""), role: .cancel) { }
+            Button(String(format: "Cancel".localized), role: .cancel) { }
         } message: {
-            Text(NSLocalizedString("Existing DDI files will be removed before downloading fresh copies.", comment: ""))
+            Text(String(format: "Existing DDI files will be removed before downloading fresh copies.".localized))
         }
         .overlay { if isImportingFile { importBusyOverlay } }
     }
@@ -240,7 +240,7 @@ struct SettingsView: View {
     private var importBusyOverlay: some View {
         Color.black.opacity(0.35).ignoresSafeArea()
         VStack(spacing: 12) {
-            ProgressView(NSLocalizedString("Processing pairing file…", comment: ""))
+            ProgressView(String(format: "Processing pairing file…".localized))
             VStack(spacing: 8) {
                 GeometryReader { geometry in
                     ZStack(alignment: .leading) {
@@ -276,11 +276,11 @@ struct SettingsView: View {
         let processInfo = ProcessInfo.processInfo
         let txmLabel: String
         if processInfo.isTXMOverridden {
-            txmLabel = NSLocalizedString("TXM (Override)", comment: "")
+            txmLabel = String(format: "TXM (Override)".localized)
         } else {
-            txmLabel = processInfo.hasTXM ? NSLocalizedString("TXM", comment: "") : NSLocalizedString("Non TXM", comment: "")
+            txmLabel = processInfo.hasTXM ? String(format: "TXM".localized) : String(format: "Non TXM".localized)
         }
-        return String(format: NSLocalizedString("Version %@ • iOS %@ • %@", comment: ""), appVersion, UIDevice.current.systemVersion, txmLabel)
+        return String(format: "Version %@ • iOS %@ • %@", appVersion, UIDevice.current.systemVersion, txmLabel)
     }
     
     // MARK: - Business Logic
@@ -299,7 +299,7 @@ struct SettingsView: View {
             await MainActor.run {
                 isRedownloadingDDI = true
                 ddiDownloadProgress = 0
-                ddiStatusMessage = NSLocalizedString("Preparing download…", comment: "")
+                ddiStatusMessage = String(format: "Preparing download…".localized)
                 ddiResultMessage = nil
             }
             do {

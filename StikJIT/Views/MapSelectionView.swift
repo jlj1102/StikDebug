@@ -804,9 +804,9 @@ struct LocationSimulationView: View {
     private func simulate() {
         guard pairingExists, let coord = coordinate, !isBusy else { return }
         runLocationCommand(
-            errorTitle: NSLocalizedString("Simulation Failed", comment: ""),
+            errorTitle: String(format: "Simulation Failed".localized),
             errorMessage: { code in
-                String(format: NSLocalizedString("Could not simulate location (error %d). Make sure the device is connected and the DDI is mounted.", comment: ""), code)
+                String(format: "Could not simulate location (error %d). Make sure the device is connected and the DDI is mounted.".localized, code)
             },
             operation: { locationUpdateCode(for: coord) }
         ) {
@@ -827,9 +827,9 @@ struct LocationSimulationView: View {
         stopResendLoop()
         cancelRoutePlayback(resetMarker: false)
         runLocationCommand(
-            errorTitle: NSLocalizedString("Route Simulation Failed", comment: ""),
+            errorTitle: String(format: "Route Simulation Failed".localized),
             errorMessage: { code in
-                String(format: NSLocalizedString("Could not start route simulation (error %d). Make sure the device is connected and the DDI is mounted.", comment: ""), code)
+                String(format: "Could not start route simulation (error %d). Make sure the device is connected and the DDI is mounted.".localized, code)
             },
             operation: { locationUpdateCode(for: firstCoordinate) }
         ) {
@@ -1137,7 +1137,7 @@ private struct RouteSearchSheet: View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 16) {
                 routeField(
-                    title: NSLocalizedString("Start", comment: ""),
+                    title: String(format: "Start".localized),
                     icon: "circle.fill",
                     tint: .green,
                     text: $startQuery,
@@ -1146,7 +1146,7 @@ private struct RouteSearchSheet: View {
                 )
 
                 routeField(
-                    title: NSLocalizedString("End", comment: ""),
+                    title: String(format: "End".localized),
                     icon: "flag.checkered.circle.fill",
                     tint: .red,
                     text: $endQuery,

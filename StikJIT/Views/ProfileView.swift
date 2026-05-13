@@ -158,7 +158,7 @@ struct ProfileView: View {
                             if let match = entry.bestMatchingProfile {
                                 HStack {
                                     Image(systemName: "clock")
-                                    Text(String(format: NSLocalizedString("Expires: %@", comment: ""), match.profile.formattedDate))
+                                    Text(String(format: "Expires: %@".localized, match.profile.formattedDate))
                                 }
                                 .foregroundStyle(match.profile.dateColor)
                                 .font(.subheadline)
@@ -203,7 +203,7 @@ struct ProfileView: View {
                                         else { expandedApps.insert(entry.id) }
                                     }
                                 } label: {
-                                    Label(showMore ? NSLocalizedString("Hide older profiles", comment: "") : String(format: NSLocalizedString("Show %d older profiles", comment: ""), extraProfiles.count),
+                                    Label(showMore ? String(format: "Hide older profiles".localized) : String(format: "Show %d older profiles".localized, extraProfiles.count),
                                           systemImage: showMore ? "chevron.up" : "chevron.down")
                                         .font(.caption)
                                         .foregroundStyle(.blue)
@@ -282,7 +282,7 @@ struct ProfileView: View {
             }
             Button("Cancel", role: .cancel) { }
         } message: {
-            Text("Remove profile for \(removeTargetName) (UUID: \(removeTargetUUID))?\nApps associated with this profile may become unavailable.")
+            Text(String(format: "Remove profile for %@ (UUID: %@)?\nApps associated with this profile may become unavailable.".localized, removeTargetName, removeTargetUUID))
         }
     }
     
