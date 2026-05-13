@@ -664,19 +664,19 @@
         }
       }
     },
-    "Favorites" : {
+    "Favorites (%d/4)" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Favorites"
+            "value" : "Favorites (%d/4)"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "收藏"
+            "value" : "收藏 (%d/4)"
           }
         }
       }
