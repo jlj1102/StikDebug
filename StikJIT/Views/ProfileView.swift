@@ -158,7 +158,7 @@ struct ProfileView: View {
                             if let match = entry.bestMatchingProfile {
                                 HStack {
                                     Image(systemName: "clock")
-                                    Text("Expires: \(match.profile.formattedDate)")
+                                    Text(String(format: NSLocalizedString("Expires: %@", comment: ""), match.profile.formattedDate))
                                 }
                                 .foregroundStyle(match.profile.dateColor)
                                 .font(.subheadline)
@@ -203,7 +203,7 @@ struct ProfileView: View {
                                         else { expandedApps.insert(entry.id) }
                                     }
                                 } label: {
-                                    Label(showMore ? "Hide older profiles" : "Show \(extraProfiles.count) older profiles",
+                                    Label(showMore ? NSLocalizedString("Hide older profiles", comment: "") : String(format: NSLocalizedString("Show %d older profiles", comment: ""), extraProfiles.count),
                                           systemImage: showMore ? "chevron.up" : "chevron.down")
                                         .font(.caption)
                                         .foregroundStyle(.blue)

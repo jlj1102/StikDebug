@@ -46,14 +46,14 @@ struct SettingsView: View {
     
     private var tabOptions: [TabOption] {
         var options: [TabOption] = [
-            TabOption(id: "home", title: "Home", detail: "Dashboard overview", icon: "house", isBeta: false),
-            TabOption(id: "scripts", title: "Scripts", detail: "Manage automation scripts", icon: "scroll", isBeta: false),
-            TabOption(id: "tools", title: "Tools", detail: "Access additional tools", icon: "wrench.and.screwdriver", isBeta: false)
+            TabOption(id: "home", title: NSLocalizedString("Home", comment: ""), detail: NSLocalizedString("Dashboard overview", comment: ""), icon: "house", isBeta: false),
+            TabOption(id: "scripts", title: NSLocalizedString("Scripts", comment: ""), detail: NSLocalizedString("Manage automation scripts", comment: ""), icon: "scroll", isBeta: false),
+            TabOption(id: "tools", title: NSLocalizedString("Tools", comment: ""), detail: NSLocalizedString("Access additional tools", comment: ""), icon: "wrench.and.screwdriver", isBeta: false)
         ]
-        options.append(TabOption(id: "deviceinfo", title: "Device Info", detail: "View detailed device metadata", icon: "iphone.and.arrow.forward", isBeta: false))
-        options.append(TabOption(id: "profiles", title: "App Expiry", detail: "Check app expiration date, install/remove profiles", icon: "calendar.badge.clock", isBeta: false))
-        options.append(TabOption(id: "processes", title: "Processes", detail: "Inspect running apps", icon: "rectangle.stack.person.crop", isBeta: false))
-        options.append(TabOption(id: "location", title: "Location Sim", detail: "Sideload only", icon: "location", isBeta: false))
+        options.append(TabOption(id: "deviceinfo", title: NSLocalizedString("Device Info", comment: ""), detail: NSLocalizedString("View detailed device metadata", comment: ""), icon: "iphone.and.arrow.forward", isBeta: false))
+        options.append(TabOption(id: "profiles", title: NSLocalizedString("App Expiry", comment: ""), detail: NSLocalizedString("Check app expiration date, install/remove profiles", comment: ""), icon: "calendar.badge.clock", isBeta: false))
+        options.append(TabOption(id: "processes", title: NSLocalizedString("Processes", comment: ""), detail: NSLocalizedString("Inspect running apps", comment: ""), icon: "rectangle.stack.person.crop", isBeta: false))
+        options.append(TabOption(id: "location", title: NSLocalizedString("Location Sim", comment: ""), detail: NSLocalizedString("Sideload only", comment: ""), icon: "location", isBeta: false))
         return options
     }
 
@@ -80,17 +80,17 @@ struct SettingsView: View {
                 // 2) GitHub
                 Section {
                     Link(destination: URL(string: "https://github.com/StephenDev0/StikDebug/stargazers")!) {
-                        Label("Star on GitHub", systemImage: "star")
+                        Label(NSLocalizedString("Star on GitHub", comment: ""), systemImage: "star")
                     }
                 }
 
                 // 3) Pairing File
-                Section("Pairing File") {
+                Section(NSLocalizedString("Pairing File", comment: "")) {
                     Button { isShowingPairingFilePicker = true } label: {
-                        Label("Import Pairing File", systemImage: "doc.badge.plus")
+                        Label(NSLocalizedString("Import Pairing File", comment: ""), systemImage: "doc.badge.plus")
                     }
                     if showPairingFileMessage && !isImportingFile {
-                        Label("Imported successfully", systemImage: "checkmark.circle.fill")
+                        Label(NSLocalizedString("Imported successfully", comment: ""), systemImage: "checkmark.circle.fill")
                             .foregroundStyle(.green)
                     }
                 }
@@ -99,8 +99,8 @@ struct SettingsView: View {
                 Section {
                     Toggle(isOn: $keepAliveAudio) {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Silent Audio")
-                            Text("Plays inaudible audio so iOS keeps the app running.")
+                            Text(NSLocalizedString("Silent Audio", comment: ""))
+                            Text(NSLocalizedString("Plays inaudible audio so iOS keeps the app running.", comment: ""))
                                 .font(.caption).foregroundStyle(.secondary)
                         }
                     }
@@ -111,8 +111,8 @@ struct SettingsView: View {
 
                     Toggle(isOn: $keepAliveLocation) {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Background Location")
-                            Text("Uses low-accuracy location to stay alive when an activity needs it.")
+                            Text(NSLocalizedString("Background Location", comment: ""))
+                            Text(NSLocalizedString("Uses low-accuracy location to stay alive when an activity needs it.", comment: ""))
                                 .font(.caption).foregroundStyle(.secondary)
                         }
                     }
@@ -121,24 +121,24 @@ struct SettingsView: View {
                     }
 
                 } header: {
-                    Text("Background Keep-Alive")
+                    Text(NSLocalizedString("Background Keep-Alive", comment: ""))
                 }
 
                 // 6) Behavior
-                Section("Behavior") {
+                Section(NSLocalizedString("Behavior", comment: "")) {
                     Toggle(isOn: $overrideTXMDetection) {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Always Run Scripts")
-                            Text("Treats device as TXM-capable to bypass hardware checks.")
+                            Text(NSLocalizedString("Always Run Scripts", comment: ""))
+                            Text(NSLocalizedString("Treats device as TXM-capable to bypass hardware checks.", comment: ""))
                                 .font(.caption).foregroundStyle(.secondary)
                         }
                     }
                 }
 
                 // 7) Advanced
-                Section("Advanced") {
+                Section(NSLocalizedString("Advanced", comment: "")) {
                     HStack {
-                        Text("Target Device IP")
+                        Text(NSLocalizedString("Target Device IP", comment: ""))
                         Spacer()
                         TextField("10.7.0.1", text: $customTargetIP)
                                 .multilineTextAlignment(.trailing)
@@ -146,10 +146,10 @@ struct SettingsView: View {
                                 .submitLabel(.done)
                     }
                     Button { openAppFolder() } label: {
-                        Label("App Folder", systemImage: "folder")
+                        Label(NSLocalizedString("App Folder", comment: ""), systemImage: "folder")
                     }.foregroundStyle(.primary)
                     Button { showDDIConfirmation = true } label: {
-                        Label("Redownload DDI", systemImage: "arrow.down.circle")
+                        Label(NSLocalizedString("Redownload DDI", comment: ""), systemImage: "arrow.down.circle")
                     }.foregroundStyle(.primary).disabled(isRedownloadingDDI)
                     if isRedownloadingDDI {
                         VStack(alignment: .leading, spacing: 4) {
@@ -162,15 +162,15 @@ struct SettingsView: View {
                 }
 
                 // 7) Help
-                Section("Help") {
+                Section(NSLocalizedString("Help", comment: "")) {
                     Link(destination: URL(string: "https://github.com/StephenDev0/StikDebug-Guide/blob/main/pairing_file.md")!) {
-                        Label("Pairing File Guide", systemImage: "questionmark.circle")
+                        Label(NSLocalizedString("Pairing File Guide", comment: ""), systemImage: "questionmark.circle")
                     }
                     Link(destination: URL(string: "https://apps.apple.com/us/app/localdevvpn/id6755608044")!) {
-                        Label("Download LocalDevVPN", systemImage: "arrow.down.circle")
+                        Label(NSLocalizedString("Download LocalDevVPN", comment: ""), systemImage: "arrow.down.circle")
                     }
                     Link(destination: URL(string: "https://discord.gg/qahjXNTDwS")!) {
-                        Label("Discord Support", systemImage: "bubble.left.and.bubble.right")
+                        Label(NSLocalizedString("Discord Support", comment: ""), systemImage: "bubble.left.and.bubble.right")
                     }
                 }
 
@@ -182,7 +182,7 @@ struct SettingsView: View {
                         .listRowBackground(Color.clear)
                 }
             }
-            .navigationTitle("Settings")
+            .navigationTitle(NSLocalizedString("Settings", comment: ""))
         }
             .fileImporter(
             isPresented: $isShowingPairingFilePicker,
@@ -225,13 +225,13 @@ struct SettingsView: View {
                 break
             }
         }
-        .confirmationDialog("Redownload DDI Files?", isPresented: $showDDIConfirmation, titleVisibility: .visible) {
-            Button("Redownload", role: .destructive) {
+        .confirmationDialog(NSLocalizedString("Redownload DDI Files?", comment: ""), isPresented: $showDDIConfirmation, titleVisibility: .visible) {
+            Button(NSLocalizedString("Redownload", comment: ""), role: .destructive) {
                 redownloadDDIPressed()
             }
-            Button("Cancel", role: .cancel) { }
+            Button(NSLocalizedString("Cancel", comment: ""), role: .cancel) { }
         } message: {
-            Text("Existing DDI files will be removed before downloading fresh copies.")
+            Text(NSLocalizedString("Existing DDI files will be removed before downloading fresh copies.", comment: ""))
         }
         .overlay { if isImportingFile { importBusyOverlay } }
     }
@@ -240,7 +240,7 @@ struct SettingsView: View {
     private var importBusyOverlay: some View {
         Color.black.opacity(0.35).ignoresSafeArea()
         VStack(spacing: 12) {
-            ProgressView("Processing pairing file…")
+            ProgressView(NSLocalizedString("Processing pairing file…", comment: ""))
             VStack(spacing: 8) {
                 GeometryReader { geometry in
                     ZStack(alignment: .leading) {
@@ -276,11 +276,11 @@ struct SettingsView: View {
         let processInfo = ProcessInfo.processInfo
         let txmLabel: String
         if processInfo.isTXMOverridden {
-            txmLabel = "TXM (Override)"
+            txmLabel = NSLocalizedString("TXM (Override)", comment: "")
         } else {
-            txmLabel = processInfo.hasTXM ? "TXM" : "Non TXM"
+            txmLabel = processInfo.hasTXM ? NSLocalizedString("TXM", comment: "") : NSLocalizedString("Non TXM", comment: "")
         }
-        return "Version \(appVersion) • iOS \(UIDevice.current.systemVersion) • \(txmLabel)"
+        return String(format: NSLocalizedString("Version %@ • iOS %@ • %@", comment: ""), appVersion, UIDevice.current.systemVersion, txmLabel)
     }
     
     // MARK: - Business Logic
@@ -299,7 +299,7 @@ struct SettingsView: View {
             await MainActor.run {
                 isRedownloadingDDI = true
                 ddiDownloadProgress = 0
-                ddiStatusMessage = "Preparing download…"
+                ddiStatusMessage = NSLocalizedString("Preparing download…", comment: "")
                 ddiResultMessage = nil
             }
             do {
@@ -368,13 +368,13 @@ struct TabCustomizationView: View {
                     enabledTabIdentifiers = TabConfiguration.serialize(ids)
                 }
             } header: {
-                Text("Pinned")
+                Text(NSLocalizedString("Pinned", comment: ""))
             } footer: {
-                Text("Settings is fixed as the 4th tab.")
+                Text(NSLocalizedString("Settings is fixed as the 4th tab.", comment: ""))
             }
 
             if !availableOptions.isEmpty {
-                Section("Available") {
+                Section(NSLocalizedString("Available", comment: "")) {
                     ForEach(availableOptions) { option in
                         Button {
                             var ids = selectedIDs
@@ -391,7 +391,7 @@ struct TabCustomizationView: View {
                 }
             }
         }
-        .navigationTitle("Tab Bar")
+        .navigationTitle(NSLocalizedString("Tab Bar", comment: ""))
         .toolbar {
             EditButton()
         }
