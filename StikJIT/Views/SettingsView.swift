@@ -6,61 +6,36 @@
 import SwiftUI
 import UIKit
 
-struct SettingsView: View {
+private enum SettingsLinks {
+    static let githubStars = URL(string: "https://github.com/StephenDev0/StikDebug/stargazers")!
+    static let pairingFileGuide = URL(string: "https://github.com/StephenDev0/StikDebug-Guide/blob/main/pairing_file.md")!
+    static let localDevVPN = URL(string: "https://apps.apple.com/us/app/localdevvpn/id6755608044")!
+    static let discord = URL(string: "https://discord.gg/qahjXNTDwS")!
+}
 
-    @AppStorage("selectedAppIcon") private var selectedAppIcon: String = "AppIcon"
-    @AppStorage("enableAdvancedOptions") private var enableAdvancedOptions = false
-    @AppStorage("enableAdvancedBetaOptions") private var enableAdvancedBetaOptions = false
-    @AppStorage("enableTesting") private var enableTesting = false
+struct SettingsView: View {
     @AppStorage(UserDefaults.Keys.txmOverride) private var overrideTXMDetection = false
     @AppStorage("keepAliveAudio") private var keepAliveAudio = true
     @AppStorage("keepAliveLocation") private var keepAliveLocation = true
     @AppStorage("customTargetIP") private var customTargetIP = ""
-    @AppStorage(TabConfiguration.storageKey) private var enabledTabIdentifiers = TabConfiguration.defaultRawValue
-    @AppStorage("primaryTabSelection") private var tabSelection = TabConfiguration.defaultIDs.first ?? "home"
-    
+
     @State private var isShowingPairingFilePicker = false
-    @State private var showPairingFileMessage = false
     @State private var isImportingFile = false
-    @State private var importProgress: Float = 0.0
-    @State private var pairingStatusMessage: String? = nil
+    @State private var pairingImportMessage: (text: String, isError: Bool)?
     @State private var showDDIConfirmation = false
     @State private var isRedownloadingDDI = false
     @State private var ddiDownloadProgress: Double = 0.0
     @State private var ddiStatusMessage: String = ""
     @State private var ddiResultMessage: (text: String, isError: Bool)?
 
-
     private var appVersion: String {
         let marketingVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
         return marketingVersion
-    }
-    
-    struct TabOption: Identifiable {
-        let id: String
-        let title: String
-        let detail: String
-        let icon: String
-        let isBeta: Bool
-    }
-    
-    private var tabOptions: [TabOption] {
-        var options: [TabOption] = [
-            TabOption(id: "home", title: String("Home".localized), detail: String("Dashboard overview".localized), icon: "house", isBeta: false),
-            TabOption(id: "scripts", title: String("Scripts".localized), detail: String("Manage automation scripts".localized), icon: "scroll", isBeta: false),
-            TabOption(id: "tools", title: String("Tools".localized), detail: String("Access additional tools".localized), icon: "wrench.and.screwdriver", isBeta: false)
-        ]
-        options.append(TabOption(id: "deviceinfo", title: String("Device Info".localized), detail: String("View detailed device metadata".localized), icon: "iphone.and.arrow.forward", isBeta: false))
-        options.append(TabOption(id: "profiles", title: String("App Expiry".localized), detail: String("Check app expiration date, install/remove profiles".localized), icon: "calendar.badge.clock", isBeta: false))
-        options.append(TabOption(id: "processes", title: String("Processes".localized), detail: String("Inspect running apps".localized), icon: "rectangle.stack.person.crop", isBeta: false))
-        options.append(TabOption(id: "location", title: String("Location Sim".localized), detail: String("Sideload only".localized), icon: "location", isBeta: false))
-        return options
     }
 
     var body: some View {
         NavigationStack {
             Form {
-                // 1) App Header
                 Section {
                     HStack {
                         Spacer()
@@ -77,25 +52,38 @@ struct SettingsView: View {
                     .padding(.vertical, 8)
                 }
 
-                // 2) GitHub
                 Section {
-                    Link(destination: URL(string: "https://github.com/StephenDev0/StikDebug/stargazers")!) {
-                        Label(String(format: "Star on GitHub".localized), systemImage: "star")
+                    Link(destination: SettingsLinks.githubStars) {
+                        Label("Star on GitHub", systemImage: "star")
                     }
                 }
 
-                // 3) Pairing File
-                Section(String(format: "Pairing File".localized)) {
-                    Button { isShowingPairingFilePicker = true } label: {
-                        Label(String(format: "Import Pairing File".localized), systemImage: "doc.badge.plus")
+                Section("Pairing File") {
+                    Button {
+                        isShowingPairingFilePicker = true
+                    } label: {
+                        Label("Import Pairing File", systemImage: "doc.badge.plus")
                     }
-                    if showPairingFileMessage && !isImportingFile {
-                        Label(String(format: "Imported successfully".localized), systemImage: "checkmark.circle.fill")
-                            .foregroundStyle(.green)
+                    .disabled(isImportingFile)
+
+                    if isImportingFile {
+                        HStack(spacing: 10) {
+                            ProgressView()
+                                .controlSize(.small)
+                            Text("Importing pairing file…")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    } else if let pairingImportMessage {
+                        Label(
+                            pairingImportMessage.text,
+                            systemImage: pairingImportMessage.isError ? "exclamationmark.triangle.fill" : "checkmark.circle.fill"
+                        )
+                        .font(.caption)
+                        .foregroundStyle(pairingImportMessage.isError ? .red : .green)
                     }
                 }
 
-                // 5) Background Keep-Alive
                 Section {
                     Toggle(isOn: $keepAliveAudio) {
                         VStack(alignment: .leading, spacing: 2) {
@@ -124,8 +112,7 @@ struct SettingsView: View {
                     Text(String(format: "Background Keep-Alive".localized))
                 }
 
-                // 6) Behavior
-                Section(String(format: "Behavior".localized)) {
+                Section("Behavior") {
                     Toggle(isOn: $overrideTXMDetection) {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(String(format: "Always Run Scripts".localized))
@@ -135,15 +122,14 @@ struct SettingsView: View {
                     }
                 }
 
-                // 7) Advanced
-                Section(String(format: "Advanced".localized)) {
+                Section("Advanced") {
                     HStack {
                         Text(String(format: "Target Device IP".localized))
                         Spacer()
                         TextField("10.7.0.1", text: $customTargetIP)
-                                .multilineTextAlignment(.trailing)
-                                .keyboardType(.numbersAndPunctuation)
-                                .submitLabel(.done)
+                            .multilineTextAlignment(.trailing)
+                            .keyboardType(.numbersAndPunctuation)
+                            .submitLabel(.done)
                     }
                     Button { openAppFolder() } label: {
                         Label(String(format: "App Folder".localized), systemImage: "folder")
@@ -161,20 +147,18 @@ struct SettingsView: View {
                     }
                 }
 
-                // 7) Help
-                Section(String(format: "Help".localized)) {
-                    Link(destination: URL(string: "https://github.com/StephenDev0/StikDebug-Guide/blob/main/pairing_file.md")!) {
-                        Label(String(format: "Pairing File Guide".localized), systemImage: "questionmark.circle")
+                Section("Help") {
+                    Link(destination: SettingsLinks.pairingFileGuide) {
+                        Label("Pairing File Guide", systemImage: "questionmark.circle")
                     }
-                    Link(destination: URL(string: "https://apps.apple.com/us/app/localdevvpn/id6755608044")!) {
-                        Label(String(format: "Download LocalDevVPN".localized), systemImage: "arrow.down.circle")
+                    Link(destination: SettingsLinks.localDevVPN) {
+                        Label("Download LocalDevVPN", systemImage: "arrow.down.circle")
                     }
-                    Link(destination: URL(string: "https://discord.gg/qahjXNTDwS")!) {
-                        Label(String(format: "Discord Support".localized), systemImage: "bubble.left.and.bubble.right")
+                    Link(destination: SettingsLinks.discord) {
+                        Label("Discord Support", systemImage: "bubble.left.and.bubble.right")
                     }
                 }
 
-                // 8) Version footer
                 Section {
                     Text(versionFooter)
                         .font(.footnote).foregroundStyle(.secondary)
@@ -184,7 +168,7 @@ struct SettingsView: View {
             }
             .navigationTitle(String(format: "Settings".localized))
         }
-            .fileImporter(
+        .fileImporter(
             isPresented: $isShowingPairingFilePicker,
             allowedContentTypes: PairingFileStore.supportedContentTypes,
             allowsMultipleSelection: false
@@ -194,35 +178,24 @@ struct SettingsView: View {
                 guard let url = urls.first else { return }
 
                 let fileManager = FileManager.default
+                isImportingFile = true
+                pairingImportMessage = nil
+
                 do {
                     try PairingFileStore.importFromPicker(url, fileManager: fileManager)
-                    DispatchQueue.main.async {
-                        isImportingFile = true
-                        importProgress = 0.0
-                        pairingStatusMessage = nil
-                        showPairingFileMessage = false
-                    }
-
-                    let progressTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { timer in
-                        DispatchQueue.main.async {
-                            if importProgress < 1.0 {
-                                importProgress += 0.05
-                            } else {
-                                timer.invalidate()
-                                isImportingFile = false
-                            }
-                        }
-                    }
-
-                    RunLoop.current.add(progressTimer, forMode: .common)
-                    DispatchQueue.main.async {
-                        startTunnelInBackground()
-                    }
+                    isImportingFile = false
+                    pairingImportMessage = ("Imported successfully", false)
+                    startTunnelInBackground()
+                    schedulePairingStatusDismiss()
                 } catch {
-                    break
+                    isImportingFile = false
+                    pairingImportMessage = ("Import failed: \(error.localizedDescription)", true)
+                    schedulePairingStatusDismiss()
                 }
-            case .failure:
-                break
+            case .failure(let error):
+                isImportingFile = false
+                pairingImportMessage = ("Import failed: \(error.localizedDescription)", true)
+                schedulePairingStatusDismiss()
             }
         }
         .confirmationDialog(String(format: "Redownload DDI Files?".localized), isPresented: $showDDIConfirmation, titleVisibility: .visible) {
@@ -233,43 +206,6 @@ struct SettingsView: View {
         } message: {
             Text(String(format: "Existing DDI files will be removed before downloading fresh copies.".localized))
         }
-        .overlay { if isImportingFile { importBusyOverlay } }
-    }
-
-    @ViewBuilder
-    private var importBusyOverlay: some View {
-        Color.black.opacity(0.35).ignoresSafeArea()
-        VStack(spacing: 12) {
-            ProgressView(String(format: "Processing pairing file…".localized))
-            VStack(spacing: 8) {
-                GeometryReader { geometry in
-                    ZStack(alignment: .leading) {
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(Color(UIColor.tertiarySystemFill))
-                            .frame(height: 8)
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(Color.green)
-                            .frame(width: geometry.size.width * CGFloat(importProgress), height: 8)
-                            .animation(.linear(duration: 0.3), value: importProgress)
-                    }
-                }
-                .frame(height: 8)
-                Text("\(Int(importProgress * 100))%")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            .padding(.top, 6)
-        }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(.ultraThinMaterial)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .strokeBorder(Color.white.opacity(0.15), lineWidth: 1)
-                )
-        )
-        .shadow(color: .black.opacity(0.15), radius: 12, x: 0, y: 4)
     }
 
     private var versionFooter: String {
@@ -282,7 +218,7 @@ struct SettingsView: View {
         }
         return String(format: "Version %@ • iOS %@ • %@", appVersion, UIDevice.current.systemVersion, txmLabel)
     }
-    
+
     // MARK: - Business Logic
 
     private func openAppFolder() {
@@ -322,7 +258,18 @@ struct SettingsView: View {
         }
         scheduleDDIStatusDismiss()
     }
-    
+
+    private func schedulePairingStatusDismiss() {
+        Task {
+            try? await Task.sleep(nanoseconds: 4_000_000_000)
+            await MainActor.run {
+                if !isImportingFile {
+                    pairingImportMessage = nil
+                }
+            }
+        }
+    }
+
     private func scheduleDDIStatusDismiss() {
         Task {
             try? await Task.sleep(nanoseconds: 4_000_000_000)
@@ -332,74 +279,5 @@ struct SettingsView: View {
                 }
             }
         }
-    }
-}
-
-// MARK: - Tab Customization
-
-struct TabCustomizationView: View {
-    let tabOptions: [SettingsView.TabOption]
-    @Binding var enabledTabIdentifiers: String
-    @Binding var tabSelection: String
-
-    private var selectedIDs: [String] {
-        TabConfiguration.sanitize(raw: enabledTabIdentifiers)
-    }
-
-    private var pinnedOptions: [SettingsView.TabOption] {
-        selectedIDs.compactMap { id in tabOptions.first(where: { $0.id == id }) }
-    }
-
-    private var availableOptions: [SettingsView.TabOption] {
-        tabOptions.filter { !selectedIDs.contains($0.id) }
-    }
-
-    var body: some View {
-        List {
-            Section {
-                ForEach(pinnedOptions) { option in
-                    HStack {
-                        Label(option.title, systemImage: option.icon)
-                    }
-                }
-                .onMove { indices, newOffset in
-                    var ids = selectedIDs
-                    ids.move(fromOffsets: indices, toOffset: newOffset)
-                    enabledTabIdentifiers = TabConfiguration.serialize(ids)
-                }
-            } header: {
-                Text(NSLocalizedString("Pinned", comment: ""))
-            } footer: {
-                Text(NSLocalizedString("Settings is fixed as the 4th tab.", comment: ""))
-            }
-
-            if !availableOptions.isEmpty {
-                Section(NSLocalizedString("Available", comment: "")) {
-                    ForEach(availableOptions) { option in
-                        Button {
-                            var ids = selectedIDs
-                            guard ids.count < TabConfiguration.maxSelectableTabs else { return }
-                            ids.append(option.id)
-                            enabledTabIdentifiers = TabConfiguration.serialize(ids)
-                        } label: {
-                            HStack {
-                                Label(option.title, systemImage: option.icon)
-                            }
-                        }
-                        .foregroundStyle(.primary)
-                    }
-                }
-            }
-        }
-        .navigationTitle(NSLocalizedString("Tab Bar", comment: ""))
-        .toolbar {
-            EditButton()
-        }
-    }
-}
-
-struct ConsoleLogsView_Preview: PreviewProvider {
-    static var previews: some View {
-        ConsoleLogsView()
     }
 }

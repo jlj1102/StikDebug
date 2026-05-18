@@ -158,23 +158,6 @@ enum ScriptStore {
         return names?[bundleID]
     }
 
-    static func autoScriptResource(for appName: String) -> ScriptResource? {
-        switch appName {
-        case "maciOS":
-            return ScriptResource(resourceName: "maciOS", fileName: "maciOS.js")
-        case "Amethyst", "MeloNX", "XeniOS", "MeloCafe":
-            return ScriptResource(resourceName: "universal", fileName: "universal.js")
-        case "Geode":
-            return ScriptResource(resourceName: "Geode", fileName: "Geode.js")
-        case "Manic EMU":
-            return ScriptResource(resourceName: "manic", fileName: "manic.js")
-        case "UTM", "DolphiniOS", "Flycast":
-            return ScriptResource(resourceName: "UTM-Dolphin", fileName: "UTM-Dolphin.js")
-        default:
-            return nil
-        }
-    }
-
     private static func ensureBundledScripts(in directory: URL, fileManager: FileManager) throws {
         for resource in bundledResources {
             guard let bundleURL = Bundle.main.url(forResource: resource.resourceName, withExtension: "js") else {
