@@ -54,7 +54,7 @@ struct SettingsView: View {
 
                 Section {
                     Link(destination: SettingsLinks.githubStars) {
-                        Label("Star on GitHub", systemImage: "star")
+                        Label(String(format: "Star on GitHub".localized), systemImage: "star")
                     }
                 }
 
@@ -62,7 +62,7 @@ struct SettingsView: View {
                     Button {
                         isShowingPairingFilePicker = true
                     } label: {
-                        Label("Import Pairing File", systemImage: "doc.badge.plus")
+                        Label(String(format: "Import Pairing File".localized), systemImage: "doc.badge.plus")
                     }
                     .disabled(isImportingFile)
 
@@ -70,7 +70,7 @@ struct SettingsView: View {
                         HStack(spacing: 10) {
                             ProgressView()
                                 .controlSize(.small)
-                            Text("Importing pairing file…")
+                            Text(String(format: "Importing pairing file…".localized))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -149,18 +149,18 @@ struct SettingsView: View {
 
                 Section("Help") {
                     Link(destination: SettingsLinks.pairingFileGuide) {
-                        Label("Pairing File Guide", systemImage: "questionmark.circle")
+                        Label(String(format: "Pairing File Guide".localized), systemImage: "questionmark.circle")
                     }
                     Link(destination: SettingsLinks.localDevVPN) {
-                        Label("Download LocalDevVPN", systemImage: "arrow.down.circle")
+                        Label(String(format: "Download LocalDevVPN".localized), systemImage: "arrow.down.circle")
                     }
                     Link(destination: SettingsLinks.discord) {
-                        Label("Discord Support", systemImage: "bubble.left.and.bubble.right")
+                        Label(String(format: "Discord Support".localized), systemImage: "bubble.left.and.bubble.right")
                     }
                 }
 
                 Section {
-                    Text(versionFooter)
+                    Text(String(format: "Version %@".localized, versionFooter))
                         .font(.footnote).foregroundStyle(.secondary)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .listRowBackground(Color.clear)
@@ -184,17 +184,17 @@ struct SettingsView: View {
                 do {
                     try PairingFileStore.importFromPicker(url, fileManager: fileManager)
                     isImportingFile = false
-                    pairingImportMessage = ("Imported successfully", false)
+                    pairingImportMessage = (String(format: "Imported successfully".localized), false)
                     startTunnelInBackground()
                     schedulePairingStatusDismiss()
                 } catch {
                     isImportingFile = false
-                    pairingImportMessage = ("Import failed: \(error.localizedDescription)", true)
+                    pairingImportMessage = (String(format: "Import failed: %@".localized, error.localizedDescription), true)
                     schedulePairingStatusDismiss()
                 }
             case .failure(let error):
                 isImportingFile = false
-                pairingImportMessage = ("Import failed: \(error.localizedDescription)", true)
+                pairingImportMessage = (String(format: "Import failed: %@".localized, error.localizedDescription), true)
                 schedulePairingStatusDismiss()
             }
         }

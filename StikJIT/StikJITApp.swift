@@ -169,8 +169,8 @@ struct HeartbeatApp: App {
                                 try await downloadFile(from: item.urlString, to: destinationURL)
                             } catch {
                                 await MainActor.run {
-                                    showAlert(title: "An Error has Occurred",
-                                              message: "[Download DDI Error]: \(error.localizedDescription)",
+                                    showAlert(title: String(format: "An Error has Occurred".localized),
+                                              message: String(format: "[Download DDI Error]: %@".localized, error.localizedDescription),
                                               showOk: true)
                                 }
                                 break
@@ -251,7 +251,7 @@ class MountingProgress: ObservableObject {
 
                 DispatchQueue.main.async {
                     if let mountError {
-                        showAlert(title: "DDI Mount Failed", message: mountError, showOk: true, showTryAgain: true) { shouldTryAgain in
+                        showAlert(title: String(format: "DDI Mount Failed".localized), message: mountError, showOk: true, showTryAgain: true) { shouldTryAgain in
                             if shouldTryAgain { self.mount() }
                         }
                     } else {
@@ -329,18 +329,18 @@ func startTunnelInBackground(showErrorUI: Bool = true) {
                     }
 
                     showAlert(
-                        title: "Invalid Pairing File",
-                        message: "The pairing file is invalid or expired. Please select a new pairing file.",
+                        title: String(format: "Invalid Pairing File".localized),
+                        message: String(format: "The pairing file is invalid or expired. Please select a new pairing file.".localized),
                         showOk: true,
                         showTryAgain: false,
-                        primaryButtonText: "Select New File"
+                        primaryButtonText: String(format: "Select New File".localized)
                     ) { _ in
                         NotificationCenter.default.post(name: NSNotification.Name("ShowPairingFilePicker"), object: nil)
                     }
                 } else {
                     showAlert(
-                        title: "Connection Error",
-                        message: "\(error.localizedDescription)\n\nMake sure Wi‑Fi and LocalDevVPN are connected and that the device is reachable.",
+                        title: String(format: "Connection Error".localized),
+                        message: String(format: "%@\n\nMake sure Wi‑Fi and LocalDevVPN are connected and that the device is reachable.", error.localizedDescription),
                         showOk: false,
                         showTryAgain: true
                     ) { shouldTryAgain in
@@ -370,7 +370,7 @@ func checkDeviceConnection(callback: @escaping (Bool, String?) -> Void) {
             connection?.cancel()
             DispatchQueue.main.async {
                 if timeoutWorkItem?.isCancelled == false {
-                    let message = "[TIMEOUT] Could not reach the device at \(targetIP). Make sure it’s online and on the same network."
+                    let message = String(format: "[TIMEOUT] Could not reach the device at %@. Make sure it’s online and on the same network.".localized, targetIP)
                     callback(false, message)
                 }
             }
@@ -413,18 +413,18 @@ public func showAlert(title: String, message: String, showOk: Bool, showTryAgain
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         if showTryAgain {
-            alert.addAction(UIAlertAction(title: primaryButtonText ?? "Try Again", style: .default) { _ in
+            alert.addAction(UIAlertAction(title: primaryButtonText ?? String(format: "Try Again".localized), style: .default) { _ in
                 completion?(true)
             })
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
+            alert.addAction(UIAlertAction(title: String(format: "Cancel".localized), style: .cancel) { _ in
                 completion?(false)
             })
         } else if showOk {
-            alert.addAction(UIAlertAction(title: primaryButtonText ?? "OK", style: .default) { _ in
+            alert.addAction(UIAlertAction(title: primaryButtonText ?? String(format: "OK".localized), style: .default) { _ in
                 completion?(true)
             })
         } else {
-             alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+             alert.addAction(UIAlertAction(title: String(format: "OK".localized), style: .default) { _ in
                 completion?(true)
             })
         }

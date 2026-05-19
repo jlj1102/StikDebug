@@ -971,7 +971,7 @@ struct LocationSimulationView: View {
                     Image(systemName: "square.and.arrow.down")
                 }
                 .disabled(isBusy || isRouteRunning || isImportingCoordinates)
-                .accessibilityLabel("Import Coordinates")
+                .accessibilityLabel(String(format: "Import Coordinates".localized))
             }
             ToolbarItem(placement: .topBarTrailing) {
                 TextField("Search location...", text: $searchText)

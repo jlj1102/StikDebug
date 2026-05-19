@@ -140,7 +140,7 @@ struct ProfileView: View {
                     Section {
                         HStack {
                             Spacer()
-                            ProgressView("Loading...")
+                            ProgressView(String(format: "Loading...".localized))
                             Spacer()
                         }
                     }
@@ -238,13 +238,13 @@ struct ProfileView: View {
                     Button {
                         isImporterPresented = true
                     } label: {
-                        Label("Add", systemImage: "plus")
+                        Label(String(format: "Add".localized), systemImage: "plus")
                     }
                     
                     Button {
                         Task { await loadData(force: true) }
                     } label: {
-                        Label("Reload", systemImage: "arrow.clockwise")
+                        Label(String(format: "Reload".localized), systemImage: "arrow.clockwise")
                     }
                     
                 }
